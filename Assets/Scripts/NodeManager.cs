@@ -11,22 +11,22 @@ public class NodeManager : MonoBehaviour
 	public static List<GameObject> NodosObj =  new List<GameObject>();
 	
     static Adyacencia matriz = new Adyacencia();
-	
-  //  void Start()
-  //  {
-  //      AgregarNodo(5);
-		//AgregarNodo(7);
-		//AgregarNodo(8);
-		//AgregarNodo(6);
-		
-  //      AgregarArco(0, 1);
-		//AgregarArco(1, 2);
-		//AgregarArco(2, 3);
-		//AgregarArco(3, 0);
-		
-  //      Debug.Log(matriz.ToString());
-  //  }
-			
+
+    void Start()
+    {
+        AgregarNodo(5);
+        AgregarNodo(7);
+        AgregarNodo(8);
+        AgregarNodo(6);
+
+        AgregarArco(0, 1);
+        AgregarArco(1, 2);
+        AgregarArco(2, 3);
+        AgregarArco(3, 0);
+
+        Debug.Log(matriz.ToString());
+    }
+
     public int AgregarNodo(int iData)
     {
         // Indice en el cual se guardaria el nodo.

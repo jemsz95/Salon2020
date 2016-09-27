@@ -5,17 +5,20 @@ public class Pila : NodeManager {
 
     GameObject top = null;
 
-    //void Start() {
-    //    AgregarNodo(5);
-    //    AgregarNodo(7);
-    //    AgregarNodo(15);
+    void Start()
+    {
+        AgregarNodo(5);
+        AgregarNodo(7);
+        AgregarNodo(15);
+        AgregarNodo(48);
 
-    //    Push(0);
-    //    Push(1);
-    //    Push(2);
+        Push(0);
+        Push(1);
+        Push(2);
+        Push(3);
 
-    //    Pop();
-    //}
+        Pop();
+    }
 
     public void Push(int index) {
         GameObject nodo = NodosObj[index];
@@ -33,6 +36,9 @@ public class Pila : NodeManager {
 
                 top = nodo;
             }
+
+            // Añade restricción de movimiento
+            nodo.GetComponent<Node>().SetIsPart(true);
         }
     }
 
@@ -44,6 +50,9 @@ public class Pila : NodeManager {
             RemoverArco(indexTop, hijoIndex);
 
             top = NodosObj[hijoIndex];
+
+            // Quita restricción movimiento
+            NodosObj[indexTop].GetComponent<Node>().SetIsPart(false);
         }
     }
 }
