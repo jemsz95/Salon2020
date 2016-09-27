@@ -6,7 +6,11 @@ using System.Text;
 class Adyacencia : List<List<int>>
 {
     // Matriz 2D que contiene las adyacencias entre los nodos. (Estos son los "Arcos").
-    List<List<int>> adyacencias = new List<List<int>>();
+    public static List<List<int>> adyacencias = new List<List<int>>();
+
+    public Adyacencia() {
+
+    }
 
     public void AddNode(int size)
     {

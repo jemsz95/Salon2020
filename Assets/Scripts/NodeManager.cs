@@ -7,26 +7,25 @@ public class NodeManager : MonoBehaviour
 	public GameObject prefabNodo;
 	public GameObject prefabArco;
 	
-	List<GameObject> ArcosObj =  new List<GameObject>();
-	List<GameObject> NodosObj =  new List<GameObject>();
+	public static List<GameObject> ArcosObj =  new List<GameObject>();
+	public static List<GameObject> NodosObj =  new List<GameObject>();
 	
-    Adyacencia matriz = new Adyacencia();
+    static Adyacencia matriz = new Adyacencia();
 	
-    void Start()
-    {
-        AgregarNodo(5);
-		AgregarNodo(7);
-		AgregarNodo(8);
-		AgregarNodo(6);
+  //  void Start()
+  //  {
+  //      AgregarNodo(5);
+		//AgregarNodo(7);
+		//AgregarNodo(8);
+		//AgregarNodo(6);
 		
-        AgregarArco(0, 1);
-		AgregarArco(1, 2);
-		AgregarArco(2, 3);
-		AgregarArco(3, 0);
-
+  //      AgregarArco(0, 1);
+		//AgregarArco(1, 2);
+		//AgregarArco(2, 3);
+		//AgregarArco(3, 0);
 		
-        Debug.Log(matriz.ToString());
-    }
+  //      Debug.Log(matriz.ToString());
+  //  }
 			
     public int AgregarNodo(int iData)
     {
@@ -116,6 +115,16 @@ public class NodeManager : MonoBehaviour
 		
 		// Actualizar Arcos
 		ActualizaArcos();
+    }
+
+    public int ObtenerIndice(GameObject nodo) {
+        for (int i = 0; i < NodosObj.Count; i++) {
+            if (NodosObj[i].Equals(nodo)) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     public List<int> ObtenerHijos(int IndexNodo)
