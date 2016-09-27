@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class Pila : NodeManager {
 
-    GameObject top = null;
+    private GameObject top = null;
 
     void Start()
     {
@@ -54,5 +53,10 @@ public class Pila : NodeManager {
             // Quita restricción movimiento
             NodosObj[indexTop].GetComponent<Node>().SetIsPart(false);
         }
+    }
+    
+    // Getter
+    public GameObject ObtieneTop() {
+        return top;
     }
 }
