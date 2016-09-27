@@ -4,109 +4,147 @@ using System.Collections.Generic;
 
 public class NodeManager : MonoBehaviour
 {
-    // Lista que contiene los nodos de nuestro grafo.
-    List<int> Nodos = new List<int>();
-
+	public GameObject prefabNodo;
+	public GameObject prefabArco;
+	
+	List<GameObject> ArcosObj =  new List<GameObject>();
+	List<GameObject> NodosObj =  new List<GameObject>();
+	
     Adyacencia matriz = new Adyacencia();
-
+	
     void Start()
     {
         AgregarNodo(5);
-        AgregarNodo(7);
-        AgregarNodo(8);
-        AgregarNodo(8);
-
+		AgregarNodo(7);
+		AgregarNodo(8);
+		AgregarNodo(6);
+		
         AgregarArco(0, 1);
 		AgregarArco(1, 2);
-		AgregarArco (0, 3);
-		AgregarArco (3, 0);
-		AgregarArco (2, 1);
+		AgregarArco(2, 3);
+		AgregarArco(3, 0);
 
-		List<int> ancestros = ObtenerAncestros (3);
-		List<int> hijos = ObtenerHijos (2);
-
-		string buffer = "";
-
-		foreach (int ancestro in ancestros) {
-			buffer += ancestro + " ";
-		}
-
-		Debug.Log (buffer);
-
-		buffer = "";
-
-		foreach (int hijo in hijos) {
-			buffer += hijo + " ";
-		}
-
-		Debug.Log (buffer);
-
-        Debug.Log(matriz);
+		
+        Debug.Log(matriz.ToString());
     }
-
-    public int AgregarNodo(int Nodo)
+			
+    public int AgregarNodo(int iData)
     {
-        // Agregar el valor a la matriz de nodos
-        int index = ((IList) Nodos).Add(Nodo);
-
-        int size = Nodos.Count;
+        // Indice en el cual se guardaria el nodo.
+        int IndexNodo = (NodosObj.Count-1 < 0) ? 0 : NodosObj.Count;
+		
+        // Dibujar Nodo
+		Vector3 NodoPos = new Vector3(IndexNodo,0,0); // <-- Dibujar en linea hacia la derecha.
+		GameObject NodoAux = (GameObject)Instantiate(prefabNodo, NodoPos, Quaternion.identity);
+		NodoAux.GetComponent<Node>().SetData(iData);
+		NodoAux.transform.SetParent(transform);
+		NodosObj.Add(NodoAux);
 
         // Crear un arreglo para inicializar la lista al tamaño de la lista de nodos
-        matriz.AddNode(size);
-
-        return index;
+        int size = NodosObj.Count;
+		
+		// Agregar el valor a la matriz de nodos
+		matriz.AddNode(size);
+	
+		return IndexNodo;
     }
 
-    public void RemoverNodo(int index)
+    public void RemoverNodo(int IndexNodo)
     {
         // Remover valor en la posición que se encuentra en index
-        Nodos.RemoveAt(index);
-
-        matriz.RemoveNode(index);
+        Destroy (NodosObj[IndexNodo]);
+		NodosObj.RemoveAt(IndexNodo);
+	
+        matriz.RemoveNode(IndexNodo);
+		
+		// Actualizar Arcos
+		ActualizaArcos();
     }
 
-    public void AgregarArco(int NodoOrigen, int NodoDestino)
+    public void AgregarArco(int IndexNodoOrigen, int IndexNodoDestino)
     {
-        matriz[NodoOrigen, NodoDestino] = 1;
+        matriz[IndexNodoOrigen, IndexNodoDestino] = 1;
+		
+		// Dibujar Arco
+		Vector3 posOrigen = NodosObj[IndexNodoOrigen].transform.position;
+		Vector3 posDestino = NodosObj[IndexNodoDestino].transform.position;
+		GameObject Arco = (GameObject)Instantiate(prefabArco, posOrigen, Quaternion.identity);
+		Arco.GetComponent<LineRenderer>().SetPosition(0, posOrigen);
+		Arco.GetComponent<LineRenderer>().SetPosition(1, posDestino);
+		ArcosObj.Add(Arco);
+		
+		// Actualizar Arcos
+		ActualizaArcos();
     }
-
-    public bool ChecarArco(int NodoOrigen, int NodoDestino)
-    {
-        return matriz[NodoOrigen, NodoDestino] > 0;
-    }
-
-    public void RemoverArco(int NodoOrigen, int NodoDestino)
-    {
-        matriz[NodoOrigen, NodoDestino] = 0;
-    }
-
-	public List<int> ObtenerHijos(int Nodo)
+	
+	public void ActualizaArcos()
 	{
-		List<int> NodosHijos = new List<int>();
-
-		for (int i=0; i<Nodos.Count;i++)
+		// Mover arcos a las nuevas posiciones
+		int ArcNum=0;	
+		for (int i=0; i<NodosObj.Count;i++)
 		{
-			if(matriz[Nodo,i] > 0)
+			for (int j=0; j<NodosObj.Count; j++)
 			{
-				NodosHijos.Add(i);
+				if(ChecarArco(i, j))
+				{
+					Vector3 posOrigen = NodosObj[i].transform.position;
+					Vector3 posDestino = NodosObj[j].transform.position;
+					ArcosObj[ArcNum].transform.position = posOrigen;
+					ArcosObj[ArcNum].GetComponent<LineRenderer>().SetPosition(0, posOrigen);
+					ArcosObj[ArcNum].GetComponent<LineRenderer>().SetPosition(1, posDestino);
+					ArcNum++;
+				}
 			}
 		}
-
-		return NodosHijos;
+		
+		// Borrar GameObject de Arcos que ya no se utilizan
+		int difArcos = ArcosObj.Count - ArcNum;
+		for(int i = 0; i < difArcos; i++)
+		{
+			Destroy (ArcosObj[ArcNum+i]);
+		}
 	}
 
+    public bool ChecarArco(int IndexNodoOrigen, int IndexNodoDestino)
+    {
+        return matriz[IndexNodoOrigen, IndexNodoDestino] > 0;
+    }
 
-    public List<int> ObtenerAncestros(int Nodo) {
-		List<int> NodosAncestros = new List<int>();
+    public void RemoverArco(int IndexNodoOrigen, int IndexNodoDestino)
+    {
+        matriz[IndexNodoOrigen, IndexNodoDestino] = 0;
+		
+		// Actualizar Arcos
+		ActualizaArcos();
+    }
 
-		for (int i=0; i<Nodos.Count;i++)
+    public List<int> ObtenerHijos(int IndexNodo)
+    {
+		List<int> IndexNodosHijos = new List<int>();
+		
+		for (int i=0; i<NodosObj.Count;i++)
 		{
-			if(matriz[i, Nodo] > 0)
+			if(matriz[IndexNodo,i] > 0)
 			{
-				NodosAncestros.Add(i);
+				IndexNodosHijos.Add(i);
 			}
 		}
+		
+		return IndexNodosHijos;
+    }
 
-		return NodosAncestros;
+    public List<int> ObtenerAncestros(int IndexNodo)
+    {
+		List<int> IndexNodosAncestros = new List<int>();
+		
+		for (int i=0; i<NodosObj.Count;i++)
+		{
+			if(matriz[i, IndexNodo] > 0)
+			{
+				IndexNodosAncestros.Add(i);
+			}
+		}
+		
+		return IndexNodosAncestros;
     }
 }
