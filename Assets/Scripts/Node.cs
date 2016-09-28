@@ -8,8 +8,8 @@ public class Node : MonoBehaviour {
 	private int NodeData = 0;
 	public Text DataText;
     private bool isPartOfStruct = false;
-	
-	public Node(int iData)
+
+    public Node(int iData)
     {
         NodeData = iData;
 		DataText.text = iData.ToString();

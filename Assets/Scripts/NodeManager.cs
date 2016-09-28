@@ -9,22 +9,22 @@ public class NodeManager : MonoBehaviour
 	public static List<GameObject> ArcosObj =  new List<GameObject>();
 	public static List<GameObject> NodosObj =  new List<GameObject>();
 	
-    static Adyacencia matriz = new Adyacencia();
+    protected static Adyacencia matriz = new Adyacencia();
 
-    void Start()
-    {
-        AgregarNodo(5);
-        AgregarNodo(7);
-        AgregarNodo(8);
-        AgregarNodo(6);
+    //void Start()
+    //{
+    //    AgregarNodo(5);
+    //    AgregarNodo(7);
+    //    AgregarNodo(8);
+    //    AgregarNodo(6);
 
-        AgregarArco(0, 1);
-        AgregarArco(1, 2);
-        AgregarArco(2, 3);
-        AgregarArco(3, 0);
+    //    AgregarArco(0, 1);
+    //    AgregarArco(1, 2);
+    //    AgregarArco(2, 3);
+    //    AgregarArco(3, 0);
 
-        Debug.Log(matriz.ToString());
-    }
+    //    Debug.Log(matriz.ToString());
+    //}
 
     public int AgregarNodo(int iData)
     {
