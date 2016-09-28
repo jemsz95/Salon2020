@@ -18,7 +18,6 @@ public class OrderSpheres : MonoBehaviour
 
     void SetSpheres()
     {
-        Debug.Log("SetSpheres");
         _SMM_A = gameObject.AddComponent<SphereMovementManager>();
         _SMM_B = gameObject.AddComponent<SphereMovementManager>();
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections;
 
-public class BubbleSort : MonoBehaviour
+public class InsercionDirectaSort : MonoBehaviour
 {
 
     public List<Transform> ltChildren = new List<Transform>();
@@ -31,14 +31,12 @@ public class BubbleSort : MonoBehaviour
 
     void OrderChildrenList()
     {
-
         if (ltChildren.Count > 0)
         {
             ltChildren.Sort(delegate (Transform a, Transform b)
             {
                 return (a.position.x).CompareTo(b.position.x);
             });
-
         }
     }
 
@@ -47,31 +45,36 @@ public class BubbleSort : MonoBehaviour
         int cantidad = ltValues.Count;
         int[] a = ltValues.ToArray();
 
-        bool intercambio = true;
 
-        for (int pasada = 1; pasada < cantidad && intercambio; pasada++)
+        for (int i = 1; i < cantidad; i++)
         {
-            intercambio = false;
-            for (int j = 0; j < cantidad - pasada; j++)
+            int iAux = a[i];
+            //Transform tAux = ltChildren[i];
+            int j = i - 1;
+
+            while (j >= 0 && iAux < a[j])
             {
-                if (a[j] > a[j + 1])
-                {
-                    int aux = a[j];
-                    a[j] = a[j + 1];
-                    a[j + 1] = aux;
+                j--;
+            }
 
-                    intercambio = true;
+            int iMenorIndex = j + 1;
 
-                    _OS.goSphereA = ltChildren[j].gameObject;
-                    _OS.goSphereB = ltChildren[j + 1].gameObject;
-                    _OS.SwapSpheres();
+            for (int k = i; k > iMenorIndex; k--)
+            {
+                int iTmp = a[k];
+                a[k] = a[k - 1];
+                a[k - 1] = iTmp;
 
-                    Transform tmp = ltChildren[j];
-                    ltChildren[j] = ltChildren[j + 1];
-                    ltChildren[j + 1] = tmp;
 
-                    yield return new WaitForSeconds(2.0f);
-                }
+                _OS.goSphereA = ltChildren[k].gameObject;
+                _OS.goSphereB = ltChildren[k-1].gameObject;
+                _OS.SwapSpheres();
+
+                Transform tmp = ltChildren[k];
+                ltChildren[k] = ltChildren[k-1];
+                ltChildren[k-1] = tmp;
+
+                yield return new WaitForSeconds(2.0f);
             }
         }
 

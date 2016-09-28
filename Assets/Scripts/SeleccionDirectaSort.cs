@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Collections;
 
-public class BubbleSort : MonoBehaviour
-{
+public class SeleccionDirectaSort : MonoBehaviour {
 
     public List<Transform> ltChildren = new List<Transform>();
     public List<int> ltValues = new List<int>();
@@ -31,14 +30,12 @@ public class BubbleSort : MonoBehaviour
 
     void OrderChildrenList()
     {
-
         if (ltChildren.Count > 0)
         {
             ltChildren.Sort(delegate (Transform a, Transform b)
             {
                 return (a.position.x).CompareTo(b.position.x);
             });
-
         }
     }
 
@@ -47,34 +44,33 @@ public class BubbleSort : MonoBehaviour
         int cantidad = ltValues.Count;
         int[] a = ltValues.ToArray();
 
-        bool intercambio = true;
-
-        for (int pasada = 1; pasada < cantidad && intercambio; pasada++)
+        for (int i = 0; i < cantidad - 1; i++)
         {
-            intercambio = false;
-            for (int j = 0; j < cantidad - pasada; j++)
+            //Busca el valor más chico
+            int menor = a[i];
+            int pos = i;
+            for (int j = i + 1; j < cantidad; j++)
             {
-                if (a[j] > a[j + 1])
+                if (a[j] < menor)
                 {
-                    int aux = a[j];
-                    a[j] = a[j + 1];
-                    a[j + 1] = aux;
-
-                    intercambio = true;
-
-                    _OS.goSphereA = ltChildren[j].gameObject;
-                    _OS.goSphereB = ltChildren[j + 1].gameObject;
-                    _OS.SwapSpheres();
-
-                    Transform tmp = ltChildren[j];
-                    ltChildren[j] = ltChildren[j + 1];
-                    ltChildren[j + 1] = tmp;
-
-                    yield return new WaitForSeconds(2.0f);
+                    menor = a[j];
+                    pos = j;
                 }
             }
-        }
+            //intercambia el valor
+            a[pos] = a[i];
+            a[i] = menor;
 
+            _OS.goSphereA = ltChildren[pos].gameObject;
+            _OS.goSphereB = ltChildren[i].gameObject;
+            _OS.SwapSpheres();
+
+            Transform tmp = ltChildren[pos];
+            ltChildren[pos] = ltChildren[i];
+            ltChildren[i] = tmp;
+
+            yield return new WaitForSeconds(2.0f);
+        }
         Debug.Log("Done");
     }
 }
