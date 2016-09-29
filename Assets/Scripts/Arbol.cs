@@ -12,17 +12,23 @@ class Arbol : NodeManager
         AgregarNodo(4);
         AgregarNodo(3);
         AgregarNodo(5);
+        AgregarNodo(13);
+        AgregarNodo(14);
+        AgregarNodo(6);
 
-        Add(0, -1, root);
-        Add(1, -1, root);
-        Add(2, -1, root);
-        Add(3, -1, root);
-        Add(4, -1, root);
+        Add(0, -1, 4, root);
+        Add(1, -1, 4, root);
+        Add(2, -1, 4, root);
+        Add(3, -1, 4, root);
+        Add(4, -1, 4, root);
+        Add(5, -1, 4, root);
+        Add(6, -1, 4, root);
+        Add(7, -1, 4, root);
 
         Debug.Log(matriz);
     }
 
-    public void Add(int index, int parentIndex, GameObject actualNode) {
+    public void Add(int index, int parentIndex, float levelSeparationLength, GameObject actualNode) {
         if (!root) {
             root = NodosObj[index];
             return;
@@ -37,10 +43,10 @@ class Arbol : NodeManager
                 AgregarArco(parentIndex, index);
 
                 if (parentNode.GetData() > node.GetData()) {
-                    NodosObj[index].transform.position = new Vector3(NodosObj[parentIndex].transform.position.x - 2, NodosObj[parentIndex].transform.position.y - 1, 0);
+                    NodosObj[index].transform.position = new Vector3(NodosObj[parentIndex].transform.position.x - levelSeparationLength, NodosObj[parentIndex].transform.position.y - 1, 0);
                 }
                 else {
-                    NodosObj[index].transform.position = new Vector3(NodosObj[parentIndex].transform.position.x + 2, NodosObj[parentIndex].transform.position.y - 1, 0);
+                    NodosObj[index].transform.position = new Vector3(NodosObj[parentIndex].transform.position.x + levelSeparationLength, NodosObj[parentIndex].transform.position.y - 1, 0);
                 }
 
                 ActualizaArcos();
@@ -55,26 +61,25 @@ class Arbol : NodeManager
             return;
         }
 
-        int indexactualNode = ObtenerIndice(actualNode);
-        List<int> childList = ObtenerHijos(indexactualNode);
+        int indexActualNode = ObtenerIndice(actualNode);
+        List<int> childList = ObtenerHijos(indexActualNode);
 
         // Insertar como hijo izquierdo?
         if (node.GetData() < actualNodeNode.GetData()) {
             if (childList[0] >= 0) {
-                Add(index, indexactualNode, NodosObj[childList[0]]);
+                Add(index, indexActualNode, levelSeparationLength / 2f, NodosObj[childList[0]]);
             }
             else {
-                Add(index, indexactualNode, null);
+                Add(index, indexActualNode, levelSeparationLength / 2f, null);
             }
         }
-
         // Insertar como hijo derecho?
-        if (node.GetData() > actualNodeNode.GetData()) {
+        else if (node.GetData() > actualNodeNode.GetData()) {
             if (childList[1] >= 0) {
-                Add(index, indexactualNode, NodosObj[childList[1]]);
+                Add(index, indexActualNode, levelSeparationLength / 2f, NodosObj[childList[1]]);
             }
             else {
-                Add(index, indexactualNode, null);
+                Add(index, indexActualNode, levelSeparationLength / 2f, null);
             }
         }
     }
@@ -96,11 +101,11 @@ class Arbol : NodeManager
                 
                 if (rootNode.GetData() > childNode.GetData())
                 {
-                    IndexNodosHijos.Insert(0, i);
+                    IndexNodosHijos[0] = i;
                 }
                 else if (rootNode.GetData() < childNode.GetData()) 
                 {
-                    IndexNodosHijos.Insert(1, i);
+                    IndexNodosHijos[1] = i;
                 }
             }
         }
