@@ -7,18 +7,6 @@ class Fila : NodeManager
     private GameObject front = null;
     private GameObject back = null;
 
-    public void Start() {
-        AgregarNodo(1);
-        AgregarNodo(2);
-        AgregarNodo(3);
-
-        Push(0);
-        Push(1);
-        Push(2);
-
-        Pop();
-    }
-
     public void Push(int index) {
         GameObject nodo = NodosObj[index];
         
@@ -57,4 +45,20 @@ class Fila : NodeManager
             }
         }
     }
+	
+	// Getter
+    public GameObject ObtenerFront() {
+        return front;
+    }
+	
+	public GameObject ObtenerSiguiente(GameObject NodoActual){
+		List<int> ListaAncestros = ObtenerAncestros(ObtenerIndice(NodoActual));
+		
+		if (ListaAncestros.Count > 0)
+		{
+			return NodosObj[ListaAncestros[0]];
+		}
+		
+		return null;
+	}
 }
