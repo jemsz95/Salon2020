@@ -3,7 +3,8 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 
-	public int Speed;
+	public float Speed;
+	public float StoppingDistance;
 
 	private Vector3 target;
 
@@ -19,6 +20,8 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+		if(Vector3.Distance(transform.position, target) > StoppingDistance) {
+			transform.position += (target - transform.position).normalized * Time.deltaTime * Speed;
+		}
 	}
 }
