@@ -13,6 +13,9 @@ public class OrderSpheres : MonoBehaviour
         {
             SetSpheres();
             RunSwapper();
+
+            goSphereA = null;
+            goSphereB = null;
         }
     }
 
