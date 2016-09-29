@@ -25,7 +25,7 @@ class Arbol : NodeManager
         Add(6, -1, 4, root);
         Add(7, -1, 4, root);
 
-        Remove(5);
+        Remove(2);
 
         Debug.Log(matriz);
     }
@@ -110,14 +110,25 @@ class Arbol : NodeManager
             RemoverArco(parentIndex, index);
 
             NodosObj[index].GetComponent<Node>().SetIsPart(false);
-            
+
             foreach (int childIndex in allChildNodes) {
                 Add(childIndex, -1, 4, root);
             }
         }
         // Nodo tiene dos hijos
         else if (childList[0] >= 0 && childList[1] >= 0) {
+            int predecesor = EncontrarPredecesor(index);
+            int padrePredecesorIndex = ObtenerAncestros(predecesor)[0];
+            int aux;
 
+            RemoverArco(padrePredecesorIndex, predecesor);
+
+            aux = NodosObj[index].GetComponent<Node>().GetData();
+
+            NodosObj[index].GetComponent<Node>().SetData(NodosObj[predecesor].GetComponent<Node>().GetData());
+            NodosObj[predecesor].GetComponent<Node>().SetData(aux);
+
+            NodosObj[predecesor].GetComponent<Node>().SetIsPart(false);
         }
 
         ActualizaArcos();
@@ -144,6 +155,24 @@ class Arbol : NodeManager
         }
 
         return StoredValues;
+    }
+
+    public int EncontrarPredecesor(int index) {
+        List<int> childList = ObtenerHijos(index);    
+
+        if (childList[0] >= 0) {
+            List<int> leftChildList = ObtenerHijos(childList[0]);
+            int nodoActual = childList[0];
+
+            while (leftChildList[1] >= 0) {
+                nodoActual = leftChildList[1];
+                leftChildList = ObtenerHijos(nodoActual);
+            }
+
+            return nodoActual;
+        }
+
+        return -1;
     }
 
     // Es importante notar que este metodo regresa los dos hijos en el orden (0: hoja izq, 1: hoja derecha)
