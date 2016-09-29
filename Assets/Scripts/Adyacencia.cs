@@ -5,10 +5,6 @@ class Adyacencia : List<List<int>>
     // Matriz 2D que contiene las adyacencias entre los nodos. (Estos son los "Arcos").
     public static List<List<int>> adyacencias = new List<List<int>>();
 
-    public Adyacencia() {
-
-    }
-
     public void AddNode(int size)
     {
         // Iteramos a traves de la matriz para hacerla crecer en cada renglón para que se mantenga como un arreglo bidimensional
