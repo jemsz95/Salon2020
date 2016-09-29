@@ -71,17 +71,20 @@ public class FirstPersonInteractable : MonoBehaviour
 				GameObject SelectedNode = rayInteractable.collider.gameObject;
 				Node nodeObj = SelectedNode.GetComponent<Node>();
 				
-				if (!nodeObj.GetIsPart())
+				if(nodeObj != null)
 				{
-					// Si el nodo que quiero borrar lo tenia seleccionado como el nodo origen o destino, borro su referencia tmb.
-					if (SelectedNode.Equals(NodoOrigen))
-						NodoOrigen = null;
-					if (SelectedNode.Equals(NodoDestino))
-						NodoDestino = null;
-						
-					int IndexSelectedNode = ListaManager.ObtenerIndice(SelectedNode);
-					ListaManager.RemoverNodo(IndexSelectedNode);
-					ListaManager.cantNodos--;
+					if (!nodeObj.GetIsPart())
+					{
+						// Si el nodo que quiero borrar lo tenia seleccionado como el nodo origen o destino, borro su referencia tmb.
+						if (SelectedNode.Equals(NodoOrigen))
+							NodoOrigen = null;
+						if (SelectedNode.Equals(NodoDestino))
+							NodoDestino = null;
+							
+						int IndexSelectedNode = ListaManager.ObtenerIndice(SelectedNode);
+						ListaManager.RemoverNodo(IndexSelectedNode);
+						ListaManager.cantNodos--;
+					}
 				}
 			}
 		}
@@ -94,21 +97,24 @@ public class FirstPersonInteractable : MonoBehaviour
             {
 				Node nodeObj = rayInteractable.collider.gameObject.GetComponent<Node>();
 				
-				if (NodoOrigen == null && !nodeObj.GetIsPart())
+				if(nodeObj != null)
 				{
-					NodoOrigen = rayInteractable.collider.gameObject;
-				}
-				else if (NodoOrigen != rayInteractable.collider.gameObject && !nodeObj.GetIsPart())
-				{
-					NodoDestino = rayInteractable.collider.gameObject;
-					
-					int IndexNodoOrigen = ListaManager.ObtenerIndice(NodoOrigen);
-					int IndexNodoDestino = ListaManager.ObtenerIndice(NodoDestino);
-					
-					ListaManager.AgregarArco(IndexNodoOrigen, IndexNodoDestino);
+					if (NodoOrigen == null && !nodeObj.GetIsPart())
+					{
+						NodoOrigen = rayInteractable.collider.gameObject;
+					}
+					else if (NodoOrigen != rayInteractable.collider.gameObject && !nodeObj.GetIsPart())
+					{
+						NodoDestino = rayInteractable.collider.gameObject;
 						
-					NodoOrigen = null;
-					NodoDestino = null;
+						int IndexNodoOrigen = ListaManager.ObtenerIndice(NodoOrigen);
+						int IndexNodoDestino = ListaManager.ObtenerIndice(NodoDestino);
+						
+						ListaManager.AgregarArco(IndexNodoOrigen, IndexNodoDestino);
+							
+						NodoOrigen = null;
+						NodoDestino = null;
+					}
 				}
 			}
 		}
@@ -121,21 +127,24 @@ public class FirstPersonInteractable : MonoBehaviour
             {
 				Node nodeObj = rayInteractable.collider.gameObject.GetComponent<Node>();
 				
-				if (NodoOrigen == null && !nodeObj.GetIsPart())
+				if (nodeObj != null)
 				{
-					NodoOrigen = rayInteractable.collider.gameObject;
-				}
-				else if (NodoOrigen != rayInteractable.collider.gameObject && !nodeObj.GetIsPart())
-				{
-					NodoDestino = rayInteractable.collider.gameObject;
+					if (NodoOrigen == null && !nodeObj.GetIsPart())
+					{
+						NodoOrigen = rayInteractable.collider.gameObject;
+					}
+					else if (NodoOrigen != rayInteractable.collider.gameObject && !nodeObj.GetIsPart())
+					{
+						NodoDestino = rayInteractable.collider.gameObject;
 
-					int IndexNodoOrigen = ListaManager.ObtenerIndice(NodoOrigen);
-					int IndexNodoDestino = ListaManager.ObtenerIndice(NodoDestino);
-					
-					ListaManager.RemoverArco(IndexNodoOrigen, IndexNodoDestino);
+						int IndexNodoOrigen = ListaManager.ObtenerIndice(NodoOrigen);
+						int IndexNodoDestino = ListaManager.ObtenerIndice(NodoDestino);
+						
+						ListaManager.RemoverArco(IndexNodoOrigen, IndexNodoDestino);
 
-					NodoOrigen = null;
-					NodoDestino = null;
+						NodoOrigen = null;
+						NodoDestino = null;
+					}
 				}
 			}
 		}
@@ -151,25 +160,28 @@ public class FirstPersonInteractable : MonoBehaviour
 					GameObject SelectedNode = rayInteractable.collider.gameObject;
 					Node nodeObj = SelectedNode.GetComponent<Node>();
 					
-					if (!nodeObj.GetIsPart())
+					if (nodeObj != null)
 					{
-						int IndexSelectedNode = PilaManager.ObtenerIndice(SelectedNode);
-						PilaManager.Push(IndexSelectedNode);
-						
-						// Si el nodo que quiero llevarme a la pila estaba previamente seleccionado, borro la ref.
-						if (SelectedNode.Equals(NodoOrigen))
-							NodoOrigen = null;
-						if (SelectedNode.Equals(NodoDestino))
-							NodoDestino = null;
-						
-						if (nodeObj.GetIsPart())
+						if (!nodeObj.GetIsPart())
 						{
-							Vector3 posBaseStack = GameObject.Find("Base").transform.position;		
-							SelectedNode.transform.position = new Vector3(posBaseStack.x, posBaseStack.y + (PilaManager.cantNodos*0.5f) + 0.2f, posBaseStack.z);
-							PilaManager.ActualizaArcos();
+							int IndexSelectedNode = PilaManager.ObtenerIndice(SelectedNode);
+							PilaManager.Push(IndexSelectedNode);
 							
-							ListaManager.cantNodos--;
-							PilaManager.cantNodos++;
+							// Si el nodo que quiero llevarme a la pila estaba previamente seleccionado, borro la ref.
+							if (SelectedNode.Equals(NodoOrigen))
+								NodoOrigen = null;
+							if (SelectedNode.Equals(NodoDestino))
+								NodoDestino = null;
+							
+							if (nodeObj.GetIsPart())
+							{
+								Vector3 posBaseStack = GameObject.Find("Base").transform.position;		
+								SelectedNode.transform.position = new Vector3(posBaseStack.x, posBaseStack.y + (PilaManager.cantNodos*0.5f) + 0.2f, posBaseStack.z);
+								PilaManager.ActualizaArcos();
+								
+								ListaManager.cantNodos--;
+								PilaManager.cantNodos++;
+							}
 						}
 					}
 				}
