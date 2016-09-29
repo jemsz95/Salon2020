@@ -25,19 +25,23 @@ class Arbol : NodeManager
         Add(6, -1, 4, root);
         Add(7, -1, 4, root);
 
+        Remove(5);
+
         Debug.Log(matriz);
     }
 
     public void Add(int index, int parentIndex, float levelSeparationLength, GameObject actualNode) {
         if (!root) {
             root = NodosObj[index];
+            NodosObj[index].GetComponent<Node>().SetIsPart(true);
+
             return;
         }
 
         Node node = NodosObj[index].GetComponent<Node>();
 
         if (!actualNode) {
-            if (parentIndex >= 0) {
+            if (parentIndex >= 0) {    
                 Node parentNode = NodosObj[parentIndex].GetComponent<Node>();
 
                 AgregarArco(parentIndex, index);
@@ -48,6 +52,8 @@ class Arbol : NodeManager
                 else {
                     NodosObj[index].transform.position = new Vector3(NodosObj[parentIndex].transform.position.x + levelSeparationLength, NodosObj[parentIndex].transform.position.y - 1, 0);
                 }
+
+                NodosObj[index].GetComponent<Node>().SetIsPart(true);
 
                 ActualizaArcos();
             }
@@ -84,8 +90,60 @@ class Arbol : NodeManager
         }
     }
 
-    public void Remove() {
+    public void Remove(int index) {
+        GameObject node = NodosObj[index];
+        List<int> childList = ObtenerHijos(index);
+        int parentIndex = ObtenerAncestros(index)[0];
+
+        // Si los dos hijos tienen el índice -1, nodo es hoja
+        if (childList[0] + childList [1] == -2) {
+            RemoverArco(parentIndex, index);
+
+            NodosObj[index].GetComponent<Node>().SetIsPart(false);
+        }
+        // Nodo tiene solo un hijo
+        else if (childList[0] == -1 || childList[1] == -1) {
+            int parentParentIndex = ObtenerAncestros(parentIndex)[0];
+
+            List<int> allChildNodes = RemoveAndStoreNodes(index);
+
+            RemoverArco(parentIndex, index);
+
+            NodosObj[index].GetComponent<Node>().SetIsPart(false);
+            
+            foreach (int childIndex in allChildNodes) {
+                Add(childIndex, -1, 4, root);
+            }
+        }
+        // Nodo tiene dos hijos
+        else if (childList[0] >= 0 && childList[1] >= 0) {
+
+        }
+
+        ActualizaArcos();
+    }
+
+    public List<int> RemoveAndStoreNodes(int index) {
+        List<int> StoredValues = new List<int>();
+        List<int> childList = ObtenerHijos(index);
         
+        if (!(childList[0] + childList[1] == -2)) {
+            if (childList[0] != -1) {
+                StoredValues.Add(childList[0]);
+                StoredValues.AddRange(RemoveAndStoreNodes(childList[0]));
+
+                RemoverArco(index, childList[0]);
+            }
+
+            if (childList[1] != -1) {
+                StoredValues.Add(childList[1]);
+                StoredValues.AddRange(RemoveAndStoreNodes(childList[1]));
+
+                RemoverArco(index, childList[1]);
+            }
+        }
+
+        return StoredValues;
     }
 
     // Es importante notar que este metodo regresa los dos hijos en el orden (0: hoja izq, 1: hoja derecha)
