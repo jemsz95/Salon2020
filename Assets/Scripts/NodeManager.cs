@@ -11,8 +11,7 @@ public class NodeManager : MonoBehaviour
 	public static List<GameObject> ArcosObj =  new List<GameObject>();
 	public static List<GameObject> NodosObj =  new List<GameObject>();
 	
-    static Adyacencia matriz = new Adyacencia();
-
+    protected static Adyacencia matriz = new Adyacencia();
     public int AgregarNodo(int iData)
     {
         // Indice en el cual se guardaria el nodo.

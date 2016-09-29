@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 36d3e41fc4183be46a4ef851560832db
+timeCreated: 1475166609
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - prefSphere: {fileID: 1000012857570532, guid: 954f5e3a67a7ab146bb8c738cef11a38,
+      type: 2}
+  - tSelectedAlgorithm: {instanceID: 0}
+  - _BS: {instanceID: 0}
+  - _IS: {instanceID: 0}
+  - _SDS: {instanceID: 0}
+  - _IDS: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

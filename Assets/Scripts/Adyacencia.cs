@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-class Adyacencia : List<List<int>>
+public class Adyacencia : List<List<int>>
 {
     // Matriz 2D que contiene las adyacencias entre los nodos. (Estos son los "Arcos").
     public static List<List<int>> adyacencias = new List<List<int>>();

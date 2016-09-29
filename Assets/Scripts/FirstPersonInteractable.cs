@@ -46,22 +46,11 @@ public class FirstPersonInteractable : MonoBehaviour
                     else if (_OS.goSphereA != rayInteractable.collider.gameObject)
                     {
                         _OS.goSphereB = rayInteractable.collider.gameObject;
+                        _OS.SwapSpheres();
                     }
                 }
-				
             }
         }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (_OS != null)
-            {
-                _OS.SwapSpheres();
-            }
-
-        }
-		
-		
 		/// Workshop LinkedList
 		// -- Agrega Nodo --
 		if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -277,8 +266,6 @@ public class FirstPersonInteractable : MonoBehaviour
 		}
     }
 
-	
-	
     bool RayCastInteractable()
     {
         return Physics.Raycast(tCharacter.position, tCharacter.forward * fDistance, out rayInteractable, fDistance, iInteractableLayerMask);
