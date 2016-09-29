@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class Node : MonoBehaviour {
@@ -8,6 +9,8 @@ public class Node : MonoBehaviour {
 	private int NodeData = 0;
 	public Text DataText;
     private bool isPartOfStruct = false;
+    public Material BlueMaterial;
+    public Material YellowMaterial;
 
     public Node(int iData)
     {
@@ -52,5 +55,15 @@ public class Node : MonoBehaviour {
             // Actualizar Arcos
             transform.parent.GetComponent<NodeManager>().ActualizaArcos();
         }
+    }
+
+    public IEnumerator GoYellow() {
+        Debug.Log("cualquier mensaje");
+        Material[] mats = gameObject.GetComponent<MeshRenderer>().materials;
+        mats[0] = YellowMaterial;
+        gameObject.GetComponent<MeshRenderer>().materials = mats;
+        yield return new WaitForSeconds(1.5f);
+        mats[0] = BlueMaterial;
+        gameObject.GetComponent<MeshRenderer>().materials = mats;
     }
 }

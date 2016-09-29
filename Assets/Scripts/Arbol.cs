@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,29 +7,32 @@ class Arbol : NodeManager
 {
     GameObject root = null;
 
-    //void Start() {
-    //    AgregarNodo(12);
-    //    AgregarNodo(15);
-    //    AgregarNodo(4);
-    //    AgregarNodo(3);
-    //    AgregarNodo(5);
-    //    AgregarNodo(13);
-    //    AgregarNodo(14);
-    //    AgregarNodo(6);
+    void Start()
+    {
+        AgregarNodo(12);
+        AgregarNodo(15);
+        AgregarNodo(4);
+        AgregarNodo(3);
+        AgregarNodo(5);
+        AgregarNodo(13);
+        AgregarNodo(14);
+        AgregarNodo(6);
 
-    //    Add(0, -1, 4, root);
-    //    Add(1, -1, 4, root);
-    //    Add(2, -1, 4, root);
-    //    Add(3, -1, 4, root);
-    //    Add(4, -1, 4, root);
-    //    Add(5, -1, 4, root);
-    //    Add(6, -1, 4, root);
-    //    Add(7, -1, 4, root);
+        Add(0, -1, 4, root);
+        Add(1, -1, 4, root);
+        Add(2, -1, 4, root);
+        Add(3, -1, 4, root);
+        Add(4, -1, 4, root);
+        Add(5, -1, 4, root);
+        Add(6, -1, 4, root);
+        Add(7, -1, 4, root);
 
-    //    Remove(2);
+        //Remove(0);
 
-    //    Debug.Log(matriz);
-    //}
+        //StartCoroutine(recorridoPreOrden(0));
+
+        Debug.Log(matriz);
+    }
 
     public void Add(int index, int parentIndex, float levelSeparationLength, GameObject actualNode) {
         if (!root) {
@@ -93,21 +97,28 @@ class Arbol : NodeManager
     public void Remove(int index) {
         GameObject node = NodosObj[index];
         List<int> childList = ObtenerHijos(index);
-        int parentIndex = ObtenerAncestros(index)[0];
+        List<int> parentList = ObtenerAncestros(index);
+        int parentIndex = -1;
+
+        if (parentList.Count > 0) {
+            parentIndex = parentList[0];
+        }
 
         // Si los dos hijos tienen el índice -1, nodo es hoja
         if (childList[0] + childList [1] == -2) {
-            RemoverArco(parentIndex, index);
+            if (parentIndex >= 0) {
+                RemoverArco(parentIndex, index);
+            }
 
             NodosObj[index].GetComponent<Node>().SetIsPart(false);
         }
         // Nodo tiene solo un hijo
         else if (childList[0] == -1 || childList[1] == -1) {
-            int parentParentIndex = ObtenerAncestros(parentIndex)[0];
-
             List<int> allChildNodes = RemoveAndStoreNodes(index);
 
-            RemoverArco(parentIndex, index);
+            if (parentIndex >= 0) {
+                RemoverArco(parentIndex, index);
+            }
 
             NodosObj[index].GetComponent<Node>().SetIsPart(false);
 
@@ -226,6 +237,40 @@ class Arbol : NodeManager
         }
 
         return foundIndex;
+    }
+
+    //bool mutex = false;
+
+    //IEnumerator recorridoPreOrden(int index) {
+    //    if (index >= 0) {
+    //        List<int> childList = ObtenerHijos(index);
+
+    //        while (mutex) {
+                
+    //        }
+
+    //        mutex = true;
+    //        NodosObj[index].GetComponent<Node>().StartCoroutine(NodosObj[index].GetComponent<Node>().GoYellow());
+    //        yield return new WaitForSeconds(2.0f);
+    //        mutex = false;
+
+    //        StartCoroutine(recorridoPreOrden(childList[0]));
+    //        StartCoroutine(recorridoPreOrden(childList[1]));
+    //    }
+    //}
+
+    public void recorridoInOrden(int index)
+    {
+        if (index >= 0)
+        {
+            List<int> childList = ObtenerHijos(index);
+
+
+        }
+    }
+
+    public void recorridoPostOrden(int index) {
+        
     }
 }
 
