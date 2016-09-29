@@ -6,29 +6,29 @@ class Arbol : NodeManager
 {
     GameObject root = null;
 
-    void Start() {
-        AgregarNodo(12);
-        AgregarNodo(15);
-        AgregarNodo(4);
-        AgregarNodo(3);
-        AgregarNodo(5);
-        AgregarNodo(13);
-        AgregarNodo(14);
-        AgregarNodo(6);
+    //void Start() {
+    //    AgregarNodo(12);
+    //    AgregarNodo(15);
+    //    AgregarNodo(4);
+    //    AgregarNodo(3);
+    //    AgregarNodo(5);
+    //    AgregarNodo(13);
+    //    AgregarNodo(14);
+    //    AgregarNodo(6);
 
-        Add(0, -1, 4, root);
-        Add(1, -1, 4, root);
-        Add(2, -1, 4, root);
-        Add(3, -1, 4, root);
-        Add(4, -1, 4, root);
-        Add(5, -1, 4, root);
-        Add(6, -1, 4, root);
-        Add(7, -1, 4, root);
+    //    Add(0, -1, 4, root);
+    //    Add(1, -1, 4, root);
+    //    Add(2, -1, 4, root);
+    //    Add(3, -1, 4, root);
+    //    Add(4, -1, 4, root);
+    //    Add(5, -1, 4, root);
+    //    Add(6, -1, 4, root);
+    //    Add(7, -1, 4, root);
 
-        Remove(2);
+    //    Remove(2);
 
-        Debug.Log(matriz);
-    }
+    //    Debug.Log(matriz);
+    //}
 
     public void Add(int index, int parentIndex, float levelSeparationLength, GameObject actualNode) {
         if (!root) {

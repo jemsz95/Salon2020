@@ -18,8 +18,8 @@ public class NodeManager : MonoBehaviour
         int IndexNodo = NodosObj.Count;
 		GameObject NodoAux = null;
 		
-		//Vector3 posMesa = transform.parent.transform.position;		
-		Vector3 NodoPos = new Vector3(0+ (cantNodos*0.5f) - 1.7f, 0 + 0.5f, 0); // <-- Dibujar en linea hacia la derecha.
+		Vector3 posMesa = transform.parent.transform.position;		
+		Vector3 NodoPos = new Vector3(posMesa.x + (cantNodos*0.5f) - 1.7f, posMesa.y + 0.5f, posMesa.z); // <-- Dibujar en linea hacia la derecha.
 		NodoAux = (GameObject)Instantiate(prefabNodo, NodoPos, Quaternion.identity);
 		
 		NodoAux.GetComponent<Node>().SetData(iData);
