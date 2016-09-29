@@ -29,9 +29,13 @@ class Arbol : NodeManager
 
     //    Debug.Log(matriz);
     //}
-
+	
+	public void AddLite(int index){
+		Add(index, -1, 2f, root);
+	}
+	
     public void Add(int index, int parentIndex, float levelSeparationLength, GameObject actualNode) {
-        if (!root) {
+		if (!root) {
             root = NodosObj[index];
             NodosObj[index].GetComponent<Node>().SetIsPart(true);
 
@@ -47,10 +51,10 @@ class Arbol : NodeManager
                 AgregarArco(parentIndex, index);
 
                 if (parentNode.GetData() > node.GetData()) {
-                    NodosObj[index].transform.position = new Vector3(NodosObj[parentIndex].transform.position.x - levelSeparationLength, NodosObj[parentIndex].transform.position.y - 1, 0);
+					NodosObj[index].transform.position = new Vector3(NodosObj[parentIndex].transform.position.x - levelSeparationLength, NodosObj[parentIndex].transform.position.y - .5f, NodosObj[parentIndex].transform.position.z);
                 }
                 else {
-                    NodosObj[index].transform.position = new Vector3(NodosObj[parentIndex].transform.position.x + levelSeparationLength, NodosObj[parentIndex].transform.position.y - 1, 0);
+					NodosObj[index].transform.position = new Vector3(NodosObj[parentIndex].transform.position.x + levelSeparationLength, NodosObj[parentIndex].transform.position.y - .5f, NodosObj[parentIndex].transform.position.z);
                 }
 
                 NodosObj[index].GetComponent<Node>().SetIsPart(true);
@@ -88,6 +92,8 @@ class Arbol : NodeManager
                 Add(index, indexActualNode, levelSeparationLength / 2f, null);
             }
         }
+		
+		return;
     }
 
     public void Remove(int index) {
@@ -101,21 +107,7 @@ class Arbol : NodeManager
 
             NodosObj[index].GetComponent<Node>().SetIsPart(false);
         }
-        // Nodo tiene solo un hijo
-        else if (childList[0] == -1 || childList[1] == -1) {
-            int parentParentIndex = ObtenerAncestros(parentIndex)[0];
-
-            List<int> allChildNodes = RemoveAndStoreNodes(index);
-
-            RemoverArco(parentIndex, index);
-
-            NodosObj[index].GetComponent<Node>().SetIsPart(false);
-
-            foreach (int childIndex in allChildNodes) {
-                Add(childIndex, -1, 4, root);
-            }
-        }
-        // Nodo tiene dos hijos
+		// Nodo tiene dos hijos
         else if (childList[0] >= 0 && childList[1] >= 0) {
             int predecesor = EncontrarPredecesor(index);
             int padrePredecesorIndex = ObtenerAncestros(predecesor)[0];
@@ -129,6 +121,18 @@ class Arbol : NodeManager
             NodosObj[predecesor].GetComponent<Node>().SetData(aux);
 
             NodosObj[predecesor].GetComponent<Node>().SetIsPart(false);
+        }
+        // Nodo tiene solo un hijo
+        else if (childList[0] == -1 || childList[1] == -1) {
+            List<int> allChildNodes = RemoveAndStoreNodes(index);
+
+            RemoverArco(parentIndex, index);
+
+            NodosObj[index].GetComponent<Node>().SetIsPart(false);
+
+            foreach (int childIndex in allChildNodes) {
+                AddLite(childIndex);
+            }
         }
 
         ActualizaArcos();

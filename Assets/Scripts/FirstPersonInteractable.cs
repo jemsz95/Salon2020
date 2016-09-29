@@ -19,12 +19,14 @@ public class FirstPersonInteractable : MonoBehaviour
 	private NodeManager ListaManager = null;
 	private Pila PilaManager = null;
 	private Fila FilaManager = null;
+	private Arbol ArbolManager = null;
 	
     void Start()
 	{
 		ListaManager = GameObject.Find("NodeManager").GetComponent<NodeManager>();
 		PilaManager = GameObject.Find("Pila").GetComponent<Pila>();
 		FilaManager = GameObject.Find("Queue").GetComponent<Fila>();
+		ArbolManager = GameObject.Find("Arbol").GetComponent<Arbol>();
 	}
 	
 	// Update is called once per frame
@@ -220,36 +222,39 @@ public class FirstPersonInteractable : MonoBehaviour
 					GameObject SelectedNode = rayInteractable.collider.gameObject;
 					Node nodeObj = SelectedNode.GetComponent<Node>();
 					
-					if (!nodeObj.GetIsPart())
+					if(nodeObj != null)
 					{
-						int IndexSelectedNode = FilaManager.ObtenerIndice(SelectedNode);
-						FilaManager.Push(IndexSelectedNode);
-						
-						// Si el nodo que quiero llevarme a la fila estaba previamente seleccionado, borro la ref.
-						if (SelectedNode.Equals(NodoOrigen))
-							NodoOrigen = null;
-						if (SelectedNode.Equals(NodoDestino))
-							NodoDestino = null;
-						
-						if (nodeObj.GetIsPart())
-						{	
-							GameObject NodoActual = FilaManager.ObtenerFront();
-							Vector3 posPipe = GameObject.Find("Queue").transform.position;		
+						if (!nodeObj.GetIsPart())
+						{
+							int IndexSelectedNode = FilaManager.ObtenerIndice(SelectedNode);
+							FilaManager.Push(IndexSelectedNode);
 							
-							for (int i=FilaManager.cantNodos; i > 0; i--)
-							{
-								if (NodoActual)
+							// Si el nodo que quiero llevarme a la fila estaba previamente seleccionado, borro la ref.
+							if (SelectedNode.Equals(NodoOrigen))
+								NodoOrigen = null;
+							if (SelectedNode.Equals(NodoDestino))
+								NodoDestino = null;
+							
+							if (nodeObj.GetIsPart())
+							{	
+								GameObject NodoActual = FilaManager.ObtenerFront();
+								Vector3 posPipe = GameObject.Find("Queue").transform.position;		
+								
+								for (int i=FilaManager.cantNodos; i > 0; i--)
 								{
-									NodoActual.transform.position = new Vector3(posPipe.x + (i*0.5f) - 1.74f, posPipe.y, posPipe.z);									
-									NodoActual = FilaManager.ObtenerSiguiente(NodoActual);
+									if (NodoActual)
+									{
+										NodoActual.transform.position = new Vector3(posPipe.x + (i*0.5f) - 1.74f, posPipe.y, posPipe.z);									
+										NodoActual = FilaManager.ObtenerSiguiente(NodoActual);
+									}
 								}
+								
+								SelectedNode.transform.position = new Vector3(posPipe.x - 1.74f, posPipe.y, posPipe.z);
+								
+								ListaManager.cantNodos--;
+								FilaManager.cantNodos++;							
+								FilaManager.ActualizaArcos();
 							}
-							
-							SelectedNode.transform.position = new Vector3(posPipe.x - 1.74f, posPipe.y, posPipe.z);
-							
-							ListaManager.cantNodos--;
-							FilaManager.cantNodos++;							
-							FilaManager.ActualizaArcos();
 						}
 					}
 				}
@@ -276,6 +281,66 @@ public class FirstPersonInteractable : MonoBehaviour
 				}
 			}
 		}
+		
+		// -- Meter Arbol --
+		if (Input.GetKeyDown(KeyCode.Alpha9))
+		{			
+			if (ArbolManager.cantNodos < 8)
+			{
+				bool bRaycastHit = RayCastInteractable();
+				if (bRaycastHit)
+				{			
+					GameObject SelectedNode = rayInteractable.collider.gameObject;
+					Node nodeObj = SelectedNode.GetComponent<Node>();
+					
+					if(nodeObj != null)
+					{
+						if (!nodeObj.GetIsPart())
+						{
+							int IndexSelectedNode = ArbolManager.ObtenerIndice(SelectedNode);
+							ArbolManager.AddLite(IndexSelectedNode);
+							
+							// Si el nodo que quiero llevarme a la fila estaba previamente seleccionado, borro la ref.
+							if (SelectedNode.Equals(NodoOrigen))
+								NodoOrigen = null;
+							if (SelectedNode.Equals(NodoDestino))
+								NodoDestino = null;
+							
+							if (nodeObj.GetIsPart())
+							{	
+								if (ArbolManager.cantNodos == 0)
+								{
+									SelectedNode.transform.position = GameObject.Find("Arbol").transform.position;
+								}
+								ListaManager.cantNodos--;
+								ArbolManager.cantNodos++;							
+								ArbolManager.ActualizaArcos();
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		// -- Sacar Arbol --
+		if (Input.GetKeyDown(KeyCode.Alpha0))
+		{			
+			bool bRaycastHit = RayCastInteractable();
+            if (bRaycastHit)
+            {
+				GameObject SelectedNode = rayInteractable.collider.gameObject;
+				int IndexSelectedNode = ArbolManager.ObtenerIndice(SelectedNode);
+				
+				ArbolManager.Remove(IndexSelectedNode);
+								
+				Vector3 posMesa = ListaManager.transform.parent.transform.position;		
+				SelectedNode.transform.position = new Vector3(posMesa.x + (ListaManager.cantNodos*0.5f) - 1.7f, posMesa.y + 0.5f, posMesa.z); 
+				
+				ListaManager.cantNodos++;
+				ArbolManager.cantNodos--;
+			}
+		}
+		
     }
 
     bool RayCastInteractable()
