@@ -12,7 +12,7 @@ public class SpecificSortManager : SortManager
         _myBaseSort = GetComponent<BaseSort>();
     }
 
-    public void RunAlgorithm()
+    public override void RunAlgorithm()
     {
         _myBaseSort.Sort();
     }
@@ -24,6 +24,7 @@ public class SpecificSortManager : SortManager
 
     void Update()
     {
+        /*
         if (Input.GetKeyDown(KeyCode.Keypad6))
         {
             Add();
@@ -36,7 +37,7 @@ public class SpecificSortManager : SortManager
         if (Input.GetKeyDown(KeyCode.KeypadEnter))
         {
             RunAlgorithm();
-        }
+        }*/
     }
 
 }

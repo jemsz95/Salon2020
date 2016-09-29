@@ -22,16 +22,29 @@ public class FirstPersonInteractable : MonoBehaviour
 	
     void Start()
 	{
-		ListaManager = GameObject.Find("NodeManager").GetComponent<NodeManager>();
-		PilaManager = GameObject.Find("Pila").GetComponent<Pila>();
-		FilaManager = GameObject.Find("Queue").GetComponent<Fila>();
+        GameObject goNode = GameObject.Find("NodeManager");
+        if (goNode != null)
+            ListaManager = goNode.GetComponent<NodeManager>();
+
+        GameObject goPila = GameObject.Find("Pila");
+        if (goPila != null)
+            PilaManager = goPila.GetComponent<Pila>();
+
+        GameObject goFila = GameObject.Find("Queue");
+        if (goFila != null)
+            FilaManager = goFila.GetComponent<Fila>();
+
+        /*
+        ListaManager = GameObject.Find("NodeManager").GetComponent<NodeManager>();
+        PilaManager = GameObject.Find("Pila").GetComponent<Pila>();
+		FilaManager = GameObject.Find("Queue").GetComponent<Fila>();*/
 	}
 	
 	// Update is called once per frame
     void Update()
     {
         Debug.DrawRay(tCharacter.position, tCharacter.forward * fDistance);
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetMouseButtonDown(0) || GvrController.ClickButtonDown)
         {
             bool bRaycastHit = RayCastInteractable();
             if (bRaycastHit)
