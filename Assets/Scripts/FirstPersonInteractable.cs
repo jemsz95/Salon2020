@@ -31,19 +31,15 @@ public class FirstPersonInteractable : MonoBehaviour
                     else if (_OS.goSphereA != rayInteractable.collider.gameObject)
                     {
                         _OS.goSphereB = rayInteractable.collider.gameObject;
+                        _OS.SwapSpheres();
                     }
                 }
+
+                
+
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (_OS != null)
-            {
-                _OS.SwapSpheres();
-            }
-
-        }
     }
 
     bool RayCastInteractable()

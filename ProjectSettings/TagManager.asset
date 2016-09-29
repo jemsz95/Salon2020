@@ -14,7 +14,7 @@ TagManager:
   - 
   - 
   - SphereInteractable
-  - Gazeable
+  - UISortInteractable
   - 
   - 
   - 
