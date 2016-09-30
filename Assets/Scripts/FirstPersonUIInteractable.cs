@@ -10,9 +10,15 @@ public class FirstPersonUIInteractable : MonoBehaviour
     public LayerMask iInteractableLayerMask;
     private RaycastHit rayInteractable;
 
+    void Start()
+    {
+        StartCoroutine(FindCamera());
+    }
+
     void Update()
     {
-        Debug.DrawRay(tCharacter.position, tCharacter.forward * fDistance);
+        if(tCharacter != null)
+            Debug.DrawRay(tCharacter.position, tCharacter.forward * fDistance);
         if (Input.GetMouseButtonDown(0) || GvrController.ClickButtonDown)
         {
             bool bRaycastHit = RayCastInteractable();
@@ -44,4 +50,20 @@ public class FirstPersonUIInteractable : MonoBehaviour
     {
         return Physics.Raycast(tCharacter.position, tCharacter.forward * fDistance, out rayInteractable, fDistance, iInteractableLayerMask);
     }
+
+    IEnumerator FindCamera()
+    {
+        yield return new WaitForSeconds(1.0f);
+
+        GameObject go = GameObject.Find("VRController Left");
+        if(go != null)
+        {
+            tCharacter = go.transform;
+        }else
+        {
+            StartCoroutine(FindCamera());
+        }
+    }
+
+
 }
