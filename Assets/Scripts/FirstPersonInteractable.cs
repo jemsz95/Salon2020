@@ -188,7 +188,7 @@ public class FirstPersonInteractable : MonoBehaviour
 							
 							if (nodeObj.GetIsPart())
 							{
-								Vector3 posBaseStack = GameObject.Find("Base").transform.position;		
+								Vector3 posBaseStack = GameObject.Find("BasePila").transform.position;		
 								SelectedNode.transform.position = new Vector3(posBaseStack.x, posBaseStack.y + (PilaManager.cantNodos*0.5f) + 0.2f, posBaseStack.z);
 								PilaManager.ActualizaArcos();
 								
@@ -235,9 +235,9 @@ public class FirstPersonInteractable : MonoBehaviour
 					
 					if(nodeObj != null)
 					{
-						if (!nodeObj.GetIsPart())
+						int IndexSelectedNode = FilaManager.ObtenerIndice(SelectedNode);
+						if (!nodeObj.GetIsPart() && (FilaManager.ObtenerHijos(IndexSelectedNode).Count + FilaManager.ObtenerAncestros(IndexSelectedNode).Count) == 0)
 						{
-							int IndexSelectedNode = FilaManager.ObtenerIndice(SelectedNode);
 							FilaManager.Push(IndexSelectedNode);
 							
 							// Si el nodo que quiero llevarme a la fila estaba previamente seleccionado, borro la ref.
@@ -306,9 +306,9 @@ public class FirstPersonInteractable : MonoBehaviour
 					
 					if(nodeObj != null)
 					{
-						if (!nodeObj.GetIsPart())
+						int IndexSelectedNode = ArbolManager.ObtenerIndice(SelectedNode);
+						if (!nodeObj.GetIsPart() && (ListaManager.ObtenerHijos(IndexSelectedNode).Count + ListaManager.ObtenerAncestros(IndexSelectedNode).Count) == 0)
 						{
-							int IndexSelectedNode = ArbolManager.ObtenerIndice(SelectedNode);
 							ArbolManager.AddLite(IndexSelectedNode);
 							
 							// Si el nodo que quiero llevarme a la fila estaba previamente seleccionado, borro la ref.
@@ -340,15 +340,27 @@ public class FirstPersonInteractable : MonoBehaviour
             if (bRaycastHit)
             {
 				GameObject SelectedNode = rayInteractable.collider.gameObject;
-				int IndexSelectedNode = ArbolManager.ObtenerIndice(SelectedNode);
-				
-				ArbolManager.Remove(IndexSelectedNode);
-								
-				Vector3 posMesa = ListaManager.transform.parent.transform.position;		
-				SelectedNode.transform.position = new Vector3(posMesa.x + (ListaManager.cantNodos*0.5f) - 1.7f, posMesa.y + 0.5f, posMesa.z); 
-				
-				ListaManager.cantNodos++;
-				ArbolManager.cantNodos--;
+				Node nodeObj = SelectedNode.GetComponent<Node>();	
+				if(nodeObj != null)
+				{
+					if (nodeObj.GetIsPart())
+					{
+						int IndexSelectedNode = ArbolManager.ObtenerIndice(SelectedNode);
+						int NodeValue = SelectedNode.GetComponent<Node>().GetData();
+						GameObject Root = ArbolManager.root;
+						
+						if(ArbolManager.Find(NodeValue, Root) != -1)
+						{
+							ArbolManager.Remove(IndexSelectedNode);
+										
+							Vector3 posMesa = ListaManager.transform.parent.transform.position;		
+							SelectedNode.transform.position = new Vector3(posMesa.x + (ListaManager.cantNodos*0.5f) - 1.7f, posMesa.y + 0.5f, posMesa.z); 
+							
+							ListaManager.cantNodos++;
+							ArbolManager.cantNodos--;
+						}
+					}
+				}
 			}
 		}
 		

@@ -5,33 +5,8 @@ using UnityEngine;
 
 class Arbol : NodeManager
 {
-    GameObject root = null;
-
-    void Start()
-    {
-        AgregarNodo(12);
-        AgregarNodo(15);
-        AgregarNodo(4);
-        AgregarNodo(3);
-        AgregarNodo(5);
-        AgregarNodo(13);
-        AgregarNodo(14);
-        AgregarNodo(6);
-
-        Add(0, -1, 4, root);
-        Add(1, -1, 4, root);
-        Add(2, -1, 4, root);
-        Add(3, -1, 4, root);
-        Add(4, -1, 4, root);
-        Add(5, -1, 4, root);
-        Add(6, -1, 4, root);
-        Add(7, -1, 4, root);
-
-        Remove(2);
-
-        Debug.Log(matriz);
-    }
-
+    public GameObject root = null;
+	
     public void AddLite(int index){
 		Add(index, -1, 2f, root);
 	}
@@ -103,13 +78,19 @@ class Arbol : NodeManager
         List<int> childList = ObtenerHijos(index);
         List<int> parentList = ObtenerAncestros(index);
         int parentIndex = -1;
-
+				
         if (parentList.Count > 0) {
             parentIndex = parentList[0];
         }
-
+		
+		if (NodosObj[index].Equals(root))
+		{
+			root = null;
+		}
+		
         // Si los dos hijos tienen el índice -1, nodo es hoja
         if (childList[0] + childList [1] == -2) {
+			
             if (parentIndex >= 0) {
                 RemoverArco(parentIndex, index);
             }
@@ -119,43 +100,41 @@ class Arbol : NodeManager
         // Nodo tiene solo un hijo
         else if (childList[0] == -1 || childList[1] == -1) {
             List<int> allChildNodes = RemoveAndStoreNodes(index);
-
-            if (parentIndex >= 0) {
+			
+			if (parentIndex >= 0) {
                 RemoverArco(parentIndex, index);
             }
-
-            NodosObj[index].GetComponent<Node>().SetIsPart(false);
-
-            foreach (int childIndex in allChildNodes) {
-                Add(childIndex, -1, 4, root);
-            }
-        }
-        // Nodo tiene dos hijos
-        else if (childList[0] >= 0 && childList[1] >= 0) {
-            int predecesor = EncontrarPredecesor(index);
-            int padrePredecesorIndex = ObtenerAncestros(predecesor)[0];
-            int aux;
-
-            RemoverArco(padrePredecesorIndex, predecesor);
-
-            aux = NodosObj[index].GetComponent<Node>().GetData();
-
-            NodosObj[index].GetComponent<Node>().SetData(NodosObj[predecesor].GetComponent<Node>().GetData());
-            NodosObj[predecesor].GetComponent<Node>().SetData(aux);
-
-            NodosObj[predecesor].GetComponent<Node>().SetIsPart(false);
-        }
-        // Nodo tiene solo un hijo
-        else if (childList[0] == -1 || childList[1] == -1) {
-            List<int> allChildNodes = RemoveAndStoreNodes(index);
-
-            RemoverArco(parentIndex, index);
 
             NodosObj[index].GetComponent<Node>().SetIsPart(false);
 
             foreach (int childIndex in allChildNodes) {
                 AddLite(childIndex);
             }
+        }
+        // Nodo tiene dos hijos
+        else if (childList[0] >= 0 && childList[1] >= 0) {
+            int predecesor = EncontrarPredecesor(index);
+            int padrePredecesorIndex = ObtenerAncestros(predecesor)[0];
+			List<int> allChildNodes = RemoveAndStoreNodes(predecesor);
+			GameObject NodoAux;
+			
+            RemoverArco(padrePredecesorIndex, predecesor);
+			
+			Vector3 PosNodo = NodosObj[index].transform.position;
+			Vector3 PosPredecesor = NodosObj[predecesor].transform.position;
+			
+            NodoAux = NodosObj[index];
+			NodosObj[index] = NodosObj[predecesor];
+            NodosObj[predecesor] = NodoAux;
+			
+			NodosObj[index].transform.position = PosNodo;
+			NodosObj[predecesor].transform.position = PosPredecesor;
+			
+			foreach (int childIndex in allChildNodes) {
+                AddLite(childIndex);
+            }
+			
+            NodosObj[predecesor].GetComponent<Node>().SetIsPart(false);
         }
 
         ActualizaArcos();
@@ -239,18 +218,20 @@ class Arbol : NodeManager
         }
 
         List <int> childList= ObtenerHijos(indexRoot);
-
+		
         int leftChildIndex = childList[0];
         int rightChildIndex = childList[1];
         int foundIndex = -1;
-
-        if ((foundIndex = Find(number, NodosObj[leftChildIndex])) > -1) {
-            return foundIndex;
-        }
-
-        if ((foundIndex = Find(number, NodosObj[rightChildIndex])) > -1) {
-            return foundIndex;
-        }
+		
+		if(childList[0] >= 0)
+			if ((foundIndex = Find(number, NodosObj[leftChildIndex])) > -1) {
+				return foundIndex;
+			}
+		
+		if(childList[1] >= 0)
+			if ((foundIndex = Find(number, NodosObj[rightChildIndex])) > -1) {
+				return foundIndex;
+			}
 
         return foundIndex;
     }
