@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class RadialMenu : MonoBehaviour, IGvrGazeResponder {
+public class RadialMenu : MonoBehaviour {
 
 	public RadialButton ButtonPrefab;
 	public RadialButton Selected;
@@ -28,22 +28,11 @@ public class RadialMenu : MonoBehaviour, IGvrGazeResponder {
 		}
 	}
 
-	public void OnGazeEnter() {
-	}
-
-	public void OnGazeExit() {
-	}
-
-	public void OnGazeTrigger() {
-	}
-
-	void Update () {
-		//if (Input.GetMouseButtonUp (0)) {
-		//	if (Selected != null) {
-		//	
-		//	}
-		//
-		//	Destroy (gameObject);
-		//}
+	public void Close () {
+		if(Selected != null) {
+			Selected.OnClick.Invoke();
+		}
+	
+		Destroy (gameObject);
 	}
 }

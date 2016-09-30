@@ -12,6 +12,8 @@ public struct RadialMenuOption {
 
 public class MenuOpener : MonoBehaviour, IGvrGazeResponder {
 
+	public RadialMenuSpawner Spawner;
+
 	public RadialMenuOption[] options;
 
 	public void OnGazeEnter() {
@@ -21,6 +23,6 @@ public class MenuOpener : MonoBehaviour, IGvrGazeResponder {
 	}
 
 	public void OnGazeTrigger() {
-		RadialMenuSpawner.Instance.SpawnMenu (options);
+		Spawner.SpawnMenu (options);
 	}
 }

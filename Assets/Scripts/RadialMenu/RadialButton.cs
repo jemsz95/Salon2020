@@ -16,26 +16,19 @@ public class RadialButton : MonoBehaviour, IGvrGazeResponder {
 	private Color defaultColor;
 
 	public void OnGazeEnter() {
-	}
-
-	public void OnGazeExit() {
-	}
-
-	public void OnGazeTrigger() {
-	}
-
-	public void OnPointerEnter (PointerEventData eventData) {
 		defaultColor = Circle.color;
 
 		Circle.color = Color.white;
-
-		Menu.Selected = this;
 	}
 
-	public void OnPointerExit (PointerEventData eventData) {
+	public void OnGazeExit() {
 		Circle.color = defaultColor;
+	}
 
-		Menu.Selected = null;
+	public void OnGazeTrigger() {
+		Menu.Selected = this;
+
+		Menu.Close();
 	}
 
 	void Start () {
