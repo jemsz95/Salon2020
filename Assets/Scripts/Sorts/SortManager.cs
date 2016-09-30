@@ -22,9 +22,9 @@ public class SortManager : MonoBehaviour
         SetExistingNodesData();
     }
 
-    // Update is called once per frame
     void Update()
     {
+        /*
         if (Input.GetKeyDown(KeyCode.Keypad6))
         {
             Add();
@@ -39,16 +39,15 @@ public class SortManager : MonoBehaviour
             RunAlgorithm();
         }
 
-        CheckInputNumbers();
+        CheckInputNumbers();*/
     }
 
-    void RunAlgorithm()
+    public virtual void RunAlgorithm()
     {
         if (iSelectedAlgorithm == 1)
         {
             if(_BS != null)
             _BS.Sort();
-            
         }
         if (iSelectedAlgorithm == 2)
         {
@@ -162,5 +161,48 @@ public class SortManager : MonoBehaviour
             nNode.SetData(rnd.Next(31));
         }
     }
+
+    void SetAlgorithmID(int iValue)
+    {
+        iSelectedAlgorithm += iValue;
+
+        if(iSelectedAlgorithm == 0)
+        {
+            iSelectedAlgorithm = 4;
+        }
+        if(iSelectedAlgorithm == 5)
+        {
+            iSelectedAlgorithm = 1;
+        }
+
+        if (iSelectedAlgorithm == 1)
+        {
+            tSelectedAlgorithm.text = "Burbuja";
+        }
+        else if (iSelectedAlgorithm == 2)
+        {
+            tSelectedAlgorithm.text = "Intercambio";
+        }
+        else if (iSelectedAlgorithm == 3)
+        {
+            tSelectedAlgorithm.text = "Seleccion directa";
+        }
+        else if (iSelectedAlgorithm == 4)
+        {
+            tSelectedAlgorithm.text = "Insercion directa";
+        }
+    }
+
+    public void Next()
+    {
+        SetAlgorithmID(1);
+        
+    }
+
+    public void Prev()
+    {
+        SetAlgorithmID(-1);
+    }
+
 
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,7 +7,8 @@ class Arbol : NodeManager
 {
     GameObject root = null;
 
-    void Start() {
+    void Start()
+    {
         AgregarNodo(12);
         AgregarNodo(15);
         AgregarNodo(4);
@@ -25,29 +27,39 @@ class Arbol : NodeManager
         Add(6, -1, 4, root);
         Add(7, -1, 4, root);
 
+        Remove(2);
+
         Debug.Log(matriz);
     }
 
+    public void AddLite(int index){
+		Add(index, -1, 2f, root);
+	}
+	
     public void Add(int index, int parentIndex, float levelSeparationLength, GameObject actualNode) {
-        if (!root) {
+		if (!root) {
             root = NodosObj[index];
+            NodosObj[index].GetComponent<Node>().SetIsPart(true);
+
             return;
         }
 
         Node node = NodosObj[index].GetComponent<Node>();
 
         if (!actualNode) {
-            if (parentIndex >= 0) {
+            if (parentIndex >= 0) {    
                 Node parentNode = NodosObj[parentIndex].GetComponent<Node>();
 
                 AgregarArco(parentIndex, index);
 
                 if (parentNode.GetData() > node.GetData()) {
-                    NodosObj[index].transform.position = new Vector3(NodosObj[parentIndex].transform.position.x - levelSeparationLength, NodosObj[parentIndex].transform.position.y - 1, 0);
+					NodosObj[index].transform.position = new Vector3(NodosObj[parentIndex].transform.position.x - levelSeparationLength, NodosObj[parentIndex].transform.position.y - .5f, NodosObj[parentIndex].transform.position.z);
                 }
                 else {
-                    NodosObj[index].transform.position = new Vector3(NodosObj[parentIndex].transform.position.x + levelSeparationLength, NodosObj[parentIndex].transform.position.y - 1, 0);
+					NodosObj[index].transform.position = new Vector3(NodosObj[parentIndex].transform.position.x + levelSeparationLength, NodosObj[parentIndex].transform.position.y - .5f, NodosObj[parentIndex].transform.position.z);
                 }
+
+                NodosObj[index].GetComponent<Node>().SetIsPart(true);
 
                 ActualizaArcos();
             }
@@ -82,10 +94,112 @@ class Arbol : NodeManager
                 Add(index, indexActualNode, levelSeparationLength / 2f, null);
             }
         }
+		
+		return;
     }
 
-    public void Remove() {
+    public void Remove(int index) {
+        GameObject node = NodosObj[index];
+        List<int> childList = ObtenerHijos(index);
+        List<int> parentList = ObtenerAncestros(index);
+        int parentIndex = -1;
+
+        if (parentList.Count > 0) {
+            parentIndex = parentList[0];
+        }
+
+        // Si los dos hijos tienen el índice -1, nodo es hoja
+        if (childList[0] + childList [1] == -2) {
+            if (parentIndex >= 0) {
+                RemoverArco(parentIndex, index);
+            }
+
+            NodosObj[index].GetComponent<Node>().SetIsPart(false);
+        }
+        // Nodo tiene solo un hijo
+        else if (childList[0] == -1 || childList[1] == -1) {
+            List<int> allChildNodes = RemoveAndStoreNodes(index);
+
+            if (parentIndex >= 0) {
+                RemoverArco(parentIndex, index);
+            }
+
+            NodosObj[index].GetComponent<Node>().SetIsPart(false);
+
+            foreach (int childIndex in allChildNodes) {
+                Add(childIndex, -1, 4, root);
+            }
+        }
+        // Nodo tiene dos hijos
+        else if (childList[0] >= 0 && childList[1] >= 0) {
+            int predecesor = EncontrarPredecesor(index);
+            int padrePredecesorIndex = ObtenerAncestros(predecesor)[0];
+            int aux;
+
+            RemoverArco(padrePredecesorIndex, predecesor);
+
+            aux = NodosObj[index].GetComponent<Node>().GetData();
+
+            NodosObj[index].GetComponent<Node>().SetData(NodosObj[predecesor].GetComponent<Node>().GetData());
+            NodosObj[predecesor].GetComponent<Node>().SetData(aux);
+
+            NodosObj[predecesor].GetComponent<Node>().SetIsPart(false);
+        }
+        // Nodo tiene solo un hijo
+        else if (childList[0] == -1 || childList[1] == -1) {
+            List<int> allChildNodes = RemoveAndStoreNodes(index);
+
+            RemoverArco(parentIndex, index);
+
+            NodosObj[index].GetComponent<Node>().SetIsPart(false);
+
+            foreach (int childIndex in allChildNodes) {
+                AddLite(childIndex);
+            }
+        }
+
+        ActualizaArcos();
+    }
+
+    public List<int> RemoveAndStoreNodes(int index) {
+        List<int> StoredValues = new List<int>();
+        List<int> childList = ObtenerHijos(index);
         
+        if (!(childList[0] + childList[1] == -2)) {
+            if (childList[0] != -1) {
+                StoredValues.Add(childList[0]);
+                StoredValues.AddRange(RemoveAndStoreNodes(childList[0]));
+
+                RemoverArco(index, childList[0]);
+            }
+
+            if (childList[1] != -1) {
+                StoredValues.Add(childList[1]);
+                StoredValues.AddRange(RemoveAndStoreNodes(childList[1]));
+
+                RemoverArco(index, childList[1]);
+            }
+        }
+
+        return StoredValues;
+    }
+
+    public int EncontrarPredecesor(int index) {
+        List<int> childList = ObtenerHijos(index);    
+
+        if (childList[0] >= 0) {
+            List<int> leftChildList = ObtenerHijos(childList[0]);
+            int nodoActual = childList[0];
+
+            while (leftChildList[1] >= 0) {
+                nodoActual = leftChildList[1];
+                leftChildList = ObtenerHijos(nodoActual);
+            }
+
+            return nodoActual;
+        }
+
+        return -1;
     }
 
     // Es importante notar que este metodo regresa los dos hijos en el orden (0: hoja izq, 1: hoja derecha)
@@ -139,6 +253,40 @@ class Arbol : NodeManager
         }
 
         return foundIndex;
+    }
+
+    //bool mutex = false;
+
+    //IEnumerator recorridoPreOrden(int index) {
+    //    if (index >= 0) {
+    //        List<int> childList = ObtenerHijos(index);
+
+    //        while (mutex) {
+                
+    //        }
+
+    //        mutex = true;
+    //        NodosObj[index].GetComponent<Node>().StartCoroutine(NodosObj[index].GetComponent<Node>().GoYellow());
+    //        yield return new WaitForSeconds(2.0f);
+    //        mutex = false;
+
+    //        StartCoroutine(recorridoPreOrden(childList[0]));
+    //        StartCoroutine(recorridoPreOrden(childList[1]));
+    //    }
+    //}
+
+    public void recorridoInOrden(int index)
+    {
+        if (index >= 0)
+        {
+            List<int> childList = ObtenerHijos(index);
+
+
+        }
+    }
+
+    public void recorridoPostOrden(int index) {
+        
     }
 }
 
