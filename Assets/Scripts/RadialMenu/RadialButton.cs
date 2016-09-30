@@ -8,7 +8,6 @@ public class RadialButton : MonoBehaviour, IGvrGazeResponder {
 
 	public Image Circle;
 	public Image Icon;
-	public string Title;
 	public RadialMenu Menu;
 	public Text Label;
 	public UnityEvent OnClick;
