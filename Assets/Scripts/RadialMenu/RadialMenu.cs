@@ -6,6 +6,7 @@ public class RadialMenu : MonoBehaviour {
 	public RadialButton ButtonPrefab;
 	public RadialButton Selected;
 	public bool UseToggleBehaviour;
+    public GameObject Caller;
 
 	// Use this for initialization
 	public void SpawnButtons (RadialMenuOption[] options) {
@@ -32,7 +33,7 @@ public class RadialMenu : MonoBehaviour {
 
 	public void Close () {
 		if(Selected != null) {
-			Selected.OnClick.Invoke();
+			Selected.OnClick.Invoke(Caller);
 		}
 	
 		Destroy (gameObject);

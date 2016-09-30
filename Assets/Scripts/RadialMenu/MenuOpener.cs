@@ -7,13 +7,13 @@ public struct RadialMenuOption {
 	public Sprite icon;
 	public Color color;
 	public string title;
-	public UnityEvent onClick;
+	public MenuClickEvent onClick;
 }
 
 public class MenuOpener : MonoBehaviour, IGvrGazeResponder {
 
 	public RadialMenuSpawner Spawner;
-	public RadialMenuOption[] options;
+	public RadialMenuOption[] Options;
 	public bool UseToggleBehaviour;
 
 	private bool shown = false;
@@ -26,7 +26,7 @@ public class MenuOpener : MonoBehaviour, IGvrGazeResponder {
 
 	public void OnGazeTrigger() {
 		if(!shown) {
-			Spawner.SpawnMenu(options, UseToggleBehaviour);
+			Spawner.SpawnMenu(Options, UseToggleBehaviour, gameObject);
 		} else {
 			Spawner.CloseMenu();
 		}

@@ -1,10 +1,14 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
+using UnityEngine.Events;
 
 public class NodeManager : MonoBehaviour
 {
-	public GameObject prefabNodo;
+    public RadialMenuOption[] MenuOptions;
+    public RadialMenuSpawner MenuSpawner;
+
+    public GameObject prefabNodo;
 	public GameObject prefabArco;
 	public int cantNodos = 0;
 	
@@ -21,9 +25,14 @@ public class NodeManager : MonoBehaviour
 		Vector3 posMesa = transform.parent.transform.position;		
 		Vector3 NodoPos = new Vector3(posMesa.x + (cantNodos*0.5f) - 1.7f, posMesa.y + 0.5f, posMesa.z); // <-- Dibujar en linea hacia la derecha.
 		NodoAux = (GameObject)Instantiate(prefabNodo, NodoPos, Quaternion.identity);
-		
+
 		NodoAux.GetComponent<Node>().SetData(iData);
 		NodoAux.transform.SetParent(transform);
+
+        MenuOpener nodoAuxMenu = NodoAux.GetComponent<MenuOpener>();
+        nodoAuxMenu.Options = MenuOptions;
+        nodoAuxMenu.Spawner = MenuSpawner;
+
 		NodosObj.Add(NodoAux);
 
         // Crear un arreglo para inicializar la lista al tamaño de la lista de nodos

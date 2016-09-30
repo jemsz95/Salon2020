@@ -10,7 +10,7 @@ public class RadialButton : MonoBehaviour, IGvrGazeResponder {
 	public Image Icon;
 	public RadialMenu Menu;
 	public Text Label;
-	public UnityEvent OnClick;
+	public UnityEvent<GameObject> OnClick;
 	public bool UseToggleBehaviour;
 
 	private Color defaultColor;
