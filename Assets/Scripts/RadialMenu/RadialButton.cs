@@ -22,7 +22,9 @@ public class RadialButton : MonoBehaviour, IGvrGazeResponder {
 	}
 
 	public void OnGazeExit() {
-		Circle.color = defaultColor;
+		if(Circle != null) {
+			Circle.color = defaultColor;
+		}
 	}
 
 	public void OnGazeTrigger() {
