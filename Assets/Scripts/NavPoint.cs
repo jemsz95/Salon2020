@@ -6,17 +6,13 @@ public class NavPoint : MonoBehaviour, IGvrGazeResponder {
 	public static PlayerController Player;
 
 	public void OnGazeEnter() {
-		if(GvrController.ClickButton) {
-			Player.Move(transform.position);
-		}
 	}
 
 	public void OnGazeExit() {
-
 	}
 
 	public void OnGazeTrigger() {
-
+		Player.Move(transform.position);
 	}
 
 	// Use this for initialization
@@ -26,6 +22,6 @@ public class NavPoint : MonoBehaviour, IGvrGazeResponder {
 	
 	// Update is called once per frame
 	void Update () {
-	
+
 	}
 }
