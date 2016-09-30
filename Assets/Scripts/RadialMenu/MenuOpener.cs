@@ -13,8 +13,10 @@ public struct RadialMenuOption {
 public class MenuOpener : MonoBehaviour, IGvrGazeResponder {
 
 	public RadialMenuSpawner Spawner;
-
 	public RadialMenuOption[] options;
+	public bool UseToggleBehaviour;
+
+	private bool shown = false;
 
 	public void OnGazeEnter() {
 	}
@@ -23,6 +25,14 @@ public class MenuOpener : MonoBehaviour, IGvrGazeResponder {
 	}
 
 	public void OnGazeTrigger() {
-		Spawner.SpawnMenu (options);
+		if(!shown) {
+			Spawner.SpawnMenu(options, UseToggleBehaviour);
+		} else {
+			Spawner.CloseMenu();
+		}
+		
+		if(UseToggleBehaviour) {
+			shown = !shown;
+		}	
 	}
 }

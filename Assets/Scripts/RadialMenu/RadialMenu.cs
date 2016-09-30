@@ -5,6 +5,7 @@ public class RadialMenu : MonoBehaviour {
 
 	public RadialButton ButtonPrefab;
 	public RadialButton Selected;
+	public bool UseToggleBehaviour;
 
 	// Use this for initialization
 	public void SpawnButtons (RadialMenuOption[] options) {
@@ -25,6 +26,7 @@ public class RadialMenu : MonoBehaviour {
 			button.Circle.color = options [i].color;
 			button.Menu = this;
 			button.OnClick = options [i].onClick;
+			button.UseToggleBehaviour = UseToggleBehaviour;
 		}
 	}
 

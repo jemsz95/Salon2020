@@ -11,6 +11,7 @@ public class RadialButton : MonoBehaviour, IGvrGazeResponder {
 	public RadialMenu Menu;
 	public Text Label;
 	public UnityEvent OnClick;
+	public bool UseToggleBehaviour;
 
 	private Color defaultColor;
 
@@ -28,8 +29,10 @@ public class RadialButton : MonoBehaviour, IGvrGazeResponder {
 
 	public void OnGazeTrigger() {
 		Menu.Selected = this;
-
-		Menu.Close();
+		
+		if(!UseToggleBehaviour) {
+			Menu.Close();
+		}
 	}
 
 	void Start () {

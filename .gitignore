@@ -130,6 +130,5 @@ captures/
 ### Android Patch ###
 gen-external-apklibs
 
-
 ### MacVIM ###
 *.swp
